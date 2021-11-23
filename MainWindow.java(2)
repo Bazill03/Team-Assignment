@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Cursor;
 import java.awt.Font;
 
+@SuppressWarnings("unused")
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
@@ -56,6 +57,11 @@ public class MainWindow extends JFrame {
 	String[] classes = { "Warrior", "Mage", "Paladin", "Hunter" };
 	JLabel lbltotalStatsLabel;
 	JLabel lblStrLabel;
+	JLabel lblWisLabel;
+	JLabel lblDexLabel;
+	JLabel lblIntLabel;
+	JLabel lblConLabel;
+	JLabel lblChaLabel;
 	JComboBox raceComboBox;
 	JComboBox classComboBox;
 	JPanel charSelectionPanel;
@@ -125,6 +131,7 @@ public class MainWindow extends JFrame {
 		classComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				characterClass = classComboBox.getSelectedItem().toString();
+				changeDefaultStats(characterClass);
 				System.out.println(characterClass);
 			}
 		});
@@ -153,6 +160,7 @@ public class MainWindow extends JFrame {
 		raceComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				characterRace = raceComboBox.getSelectedItem().toString();
+				changeDefaultStats(characterRace);
 				System.out.println(characterRace);
 			}
 		});
@@ -245,7 +253,7 @@ public class MainWindow extends JFrame {
 		JButton btnWisDownButton = new JButton("-");
 		wisPanel.add(btnWisDownButton);
 
-		JLabel lblWisLabel = new JLabel("Wis: " + wis);
+		lblWisLabel = new JLabel("Wis: " + wis);
 		lblWisLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		wisPanel.add(lblWisLabel);
 
@@ -259,7 +267,7 @@ public class MainWindow extends JFrame {
 		JButton btnDexDownButton = new JButton("-");
 		dexPanel.add(btnDexDownButton);
 
-		JLabel lblDexLabel = new JLabel("Dex: " + dex);
+		lblDexLabel = new JLabel("Dex: " + dex);
 		lblDexLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		dexPanel.add(lblDexLabel);
 
@@ -273,7 +281,7 @@ public class MainWindow extends JFrame {
 		JButton btnIntDownButton = new JButton("-");
 		intPanel.add(btnIntDownButton);
 
-		JLabel lblIntLabel = new JLabel("Int: " + intelligence);
+		lblIntLabel = new JLabel("Int: " + intelligence);
 		lblIntLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		intPanel.add(lblIntLabel);
 
@@ -287,7 +295,7 @@ public class MainWindow extends JFrame {
 		JButton btnConDownButton = new JButton("-");
 		conPanel.add(btnConDownButton);
 
-		JLabel lblConLabel = new JLabel("Con: " + con);
+		lblConLabel = new JLabel("Con: " + con);
 		lblConLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		conPanel.add(lblConLabel);
 
@@ -302,7 +310,7 @@ public class MainWindow extends JFrame {
 		JButton btnChaDownButton = new JButton("-");
 		chaPanel.add(btnChaDownButton);
 
-		JLabel lblChaLabel = new JLabel("Cha: " + cha);
+		lblChaLabel = new JLabel("Cha: " + cha);
 		lblChaLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		chaPanel.add(lblChaLabel);
 
@@ -373,6 +381,37 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 		}
 
+	}
+	
+	//player stat order: str, wis, dex, int, con, cha
+	private void changeDefaultStats(String input) {
+		
+		//Resets everything
+		pointsToSpend = 0;
+		str = 0;
+		wis = 0;
+		dex = 0;
+		intelligence = 0;
+		con = 0;
+		cha = 0;
+		
+		int[] stats = Character.getDefaultStats(input);
+		str += stats[0];
+		System.out.println(stats[0] + " is added to " + str);
+		wis += stats[1];
+		dex += stats[2];
+		intelligence += stats[3];
+		con += stats[4];
+		cha += stats[5];
+		
+		
+		//Change displayed Stats
+		lblStrLabel.setText("Str: " + str);
+		lblWisLabel.setText("Wis: " + wis);
+		lblDexLabel.setText("Dex: " + dex);
+		lblIntLabel.setText("Int: " + intelligence);
+		lblConLabel.setText("Con: " + con);
+		lblChaLabel.setText("Cha: " + cha);
 	}
 
 	/**
