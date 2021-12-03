@@ -1,3 +1,5 @@
+package dnDCharacterCreator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,22 +11,7 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
-public class displayInformation {
-
-	// Race Desc
-	static String trollDesc = "";
-	static String humanDesc = "";
-	static String elfDesc = "";
-	static String worgenDesc = "";
-
-	// Class Desc
-	static String mageDesc = "";
-	static String hunterDesc = "";
-	static String paladinDesc = "";
-	static String warriorDesc = "";
-
-	// Order in class/race file: troll,human,elf,worgen,mage,hunter,paladin,warrior
-
+public class DisplayInformation {
 	/**
 	 * Finds class or race description
 	 * 
@@ -34,22 +21,19 @@ public class displayInformation {
 	 */
 	public static void getInformation(String input) throws FileNotFoundException {
 
-		File classRaceInfoFile = new File("classRaceInfo.txt");
-		String[] classRaceInfoArray = new String[7];
+		String[] classRaceInfoArray = new String[8];
 		String output = "";
-		
-		
-		try (Scanner fileInput = new Scanner(classRaceInfoFile)) {
-			while (fileInput.hasNextLine()) {
+
+		try (Scanner fileInput = new Scanner(MainWindow.class.getResourceAsStream("classRaceInfo.csv"))) {
+			if (fileInput.hasNextLine()) {
 				for (int i = 0; i < classRaceInfoArray.length; i++) {
 					String lookingForClassRace = fileInput.nextLine();
 					classRaceInfoArray[i] = lookingForClassRace;
 				}
-
 			}
 		}
 
-		// HashMap of Races
+		// HashMap of Races and classes
 		HashMap<String, String> raceSet = new HashMap<>();
 		raceSet.put("Troll", classRaceInfoArray[0]);
 		raceSet.put("Human", classRaceInfoArray[1]);
@@ -57,16 +41,14 @@ public class displayInformation {
 		raceSet.put("Worgen", classRaceInfoArray[3]);
 		raceSet.put("Mage", classRaceInfoArray[4]);
 		raceSet.put("Hunter", classRaceInfoArray[5]);
-		raceSet.put("Paladin", classRaceInfoArray[6]);
+		raceSet.put("Orge", classRaceInfoArray[6]);
 		raceSet.put("Warrior", classRaceInfoArray[7]);
 
-		for(Map.Entry<String, String> el : raceSet.entrySet()){
-			if(el.getKey() == input) {
+		for (Map.Entry<String, String> el : raceSet.entrySet()) {
+			if (el.getKey() == input) {
 				output = el.getValue();
 			}
 		}
-		
-
 
 		displayInformationWindow(output);
 	}
