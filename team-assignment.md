@@ -9,18 +9,18 @@ Create a D&D Character builder using Swing.
 
 # Tasks
 - [ ] Get GUI configured
-	- [ ] Make room for portrait
+	- [x] Make room for portrait
 - [x] Cycle class via drop-down box
 - [x] Cycle race via drop-down box
-- [ ] Portraits
-	- [ ] Drawn
-	- [ ] Implemented
-- [ ] randomizeCharacter.java
+- [x] Portraits
+	- [x] Drawn
+	- [x] Implemented
+- [x] randomizeCharacter.java
 - [x] Info buttons
 	- [x] Text Written
 	- [x] Opens in a new window
 	- [ ] Descriptions moved to file
-	- [ ] Read from file
+	- [x] Read from file
 - [x] Gender buttons
 - [ ] Stats
 	- [ ] unsure on implementation
