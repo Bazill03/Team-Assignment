@@ -28,6 +28,7 @@ import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.Cursor;
 import java.awt.Font;
+import javax.swing.JCheckBox;
 
 public class MainWindow extends JFrame {
 
@@ -53,10 +54,6 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 
-	// Temp
-	LegendaryItems<String, Integer> holySword = new LegendaryItems<>("Holy Sword", 1);
-	LegendaryItems<String, Integer> enchantedStaff = new LegendaryItems<>("Enchanted Staff", 1);
-	LegendaryItems<String, Integer> dualPistol = new LegendaryItems<>("Dual Pistols", 2);
 	
 	Random rand = new Random();
 	
@@ -66,11 +63,19 @@ public class MainWindow extends JFrame {
 	String[] races = {"Human", "Orge", "Troll", "Worgen"};
 	String[] classes = {"Warrior", "Mage", "Hunter"};
 	
+	//Stat Labels
 	JLabel lbltotalStatsLabel;
 	JLabel lblStrLabel;
+	JLabel lblDexLabel;
+	JLabel lblConLabel;
+	JLabel lblWisLabel;
+	JLabel lblIntLabel;
+	JLabel lblChaLabel;
 	
 	JComboBox raceComboBox;
 	JComboBox classComboBox;
+	
+	JCheckBox chckbxLegendaryCheckBox;
 	
 	JPanel charSelectionPanel;
 	JPanel controlPanel;
@@ -79,12 +84,12 @@ public class MainWindow extends JFrame {
 	int pointsToSpend = 10;
 
 	// Stats
-	int str = 10;
-	int wis = 8;
-	int dex = 8;
-	int intelligence = 5;
-	int con = 10;
-	int cha = 5;
+	int str = 14;
+	int wis = 6;
+	int dex = 11;
+	int intelligence = 6;
+	int con = 14;
+	int cha = 11;
 	
 	int counter = 0;
 	int classCounter = 0;
@@ -246,7 +251,6 @@ public class MainWindow extends JFrame {
 				
 				characterRace = raceComboBox.getSelectedItem().toString();
 				
-				
 				if (characterRace == "Human" && isFemale == false) {
 					counter = 0;
 					((ChangingImgsPanel) displayPanel).changeHead(counter);
@@ -299,7 +303,7 @@ public class MainWindow extends JFrame {
 
 	private JPanel createGenderPanel() {
 		JPanel GenderPanel = new JPanel();
-		GenderPanel.setPreferredSize(new Dimension(200, 30));
+		GenderPanel.setPreferredSize(new Dimension(250, 30));
 		
 		controlPanel_1.add(GenderPanel);
 		
@@ -313,8 +317,8 @@ public class MainWindow extends JFrame {
 	
 		rdbtnManButton.setSelected(true);
 		
-		JRadioButton radioButton = new JRadioButton("New radio button");
-		GenderPanel.add(radioButton);
+		chckbxLegendaryCheckBox = new JCheckBox("Legendary");
+		GenderPanel.add(chckbxLegendaryCheckBox);
 		
 		rdbtnManButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -371,7 +375,6 @@ public class MainWindow extends JFrame {
 		btnStrUpButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				// raiseOrLowerStat(str, "Str", lblStrLabel, true);
 				if (pointsToSpend > 0) {
 					str++;
 					pointsToSpend--;
@@ -387,13 +390,33 @@ public class MainWindow extends JFrame {
 		wisPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btnWisDownButton = new JButton("-");
+		btnWisDownButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (wis > 0) {
+					wis--;
+					pointsToSpend++;
+					lblWisLabel.setText("Wis: " + wis);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		wisPanel.add(btnWisDownButton);
 
-		JLabel lblWisLabel = new JLabel("Wis: " + wis);
+		lblWisLabel = new JLabel("Wis: " + wis);
 		lblWisLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		wisPanel.add(lblWisLabel);
 
 		JButton btnWisUpButton = new JButton("+");
+		btnWisUpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (pointsToSpend > 0) {
+					wis++;
+					pointsToSpend--;
+					lblWisLabel.setText("Wis: " + wis);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		wisPanel.add(btnWisUpButton);
 
 		JPanel dexPanel = new JPanel();
@@ -401,13 +424,33 @@ public class MainWindow extends JFrame {
 		dexPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btnDexDownButton = new JButton("-");
+		btnDexDownButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (dex > 0) {
+					dex--;
+					pointsToSpend++;
+					lblDexLabel.setText("Dex: " + dex);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		dexPanel.add(btnDexDownButton);
 
-		JLabel lblDexLabel = new JLabel("Dex: " + dex);
+		lblDexLabel = new JLabel("Dex: " + dex);
 		lblDexLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		dexPanel.add(lblDexLabel);
 
 		JButton btnDexUpButton = new JButton("+");
+		btnDexUpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (pointsToSpend > 0) {
+					dex++;
+					pointsToSpend--;
+					lblDexLabel.setText("Dex: " + dex);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		dexPanel.add(btnDexUpButton);
 
 		JPanel intPanel = new JPanel();
@@ -415,13 +458,33 @@ public class MainWindow extends JFrame {
 		intPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btnIntDownButton = new JButton("-");
+		btnIntDownButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (intelligence > 0) {
+					intelligence--;
+					pointsToSpend++;
+					lblIntLabel.setText("Int: " + intelligence);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		intPanel.add(btnIntDownButton);
 
-		JLabel lblIntLabel = new JLabel("Int: " + intelligence);
+		lblIntLabel = new JLabel("Int: " + intelligence);
 		lblIntLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		intPanel.add(lblIntLabel);
 
 		JButton btnIntUpButton = new JButton("+");
+		btnIntUpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (pointsToSpend > 0) {
+					intelligence++;
+					pointsToSpend--;
+					lblIntLabel.setText("Int: " + intelligence);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		intPanel.add(btnIntUpButton);
 
 		JPanel conPanel = new JPanel();
@@ -429,13 +492,33 @@ public class MainWindow extends JFrame {
 		conPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btnConDownButton = new JButton("-");
+		btnConDownButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (con > 0) {
+					con--;
+					pointsToSpend++;
+					lblConLabel.setText("Con: " + con);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		conPanel.add(btnConDownButton);
 
-		JLabel lblConLabel = new JLabel("Con: " + con);
+		lblConLabel = new JLabel("Con: " + con);
 		lblConLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		conPanel.add(lblConLabel);
 
 		JButton btnConUpButton = new JButton("+");
+		btnConUpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (pointsToSpend > 0) {
+					con++;
+					pointsToSpend--;
+					lblConLabel.setText("Con: " + con);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		conPanel.add(btnConUpButton);
 
 		// Best stat
@@ -444,13 +527,33 @@ public class MainWindow extends JFrame {
 		chaPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
 		JButton btnChaDownButton = new JButton("-");
+		btnChaDownButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (cha > 0) {
+					cha--;
+					pointsToSpend++;
+					lblChaLabel.setText("Cha: " + cha);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		chaPanel.add(btnChaDownButton);
 
-		JLabel lblChaLabel = new JLabel("Cha: " + cha);
+		lblChaLabel = new JLabel("Cha: " + cha);
 		lblChaLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		chaPanel.add(lblChaLabel);
 
 		JButton btnChaUpButton = new JButton("+");
+		btnChaUpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (pointsToSpend > 0) {
+					cha++;
+					pointsToSpend--;
+					lblChaLabel.setText("Cha: " + cha);
+					lbltotalStatsLabel.setText("Points: " + pointsToSpend);
+				}
+			}
+		});
 		chaPanel.add(btnChaUpButton);
 
 		lbltotalStatsLabel = new JLabel("Points: " + pointsToSpend);
@@ -468,10 +571,23 @@ public class MainWindow extends JFrame {
 		btnCreateCharacterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Create character Object
-				System.out.println(characterClass);
-				System.out.println(characterRace);
-				Character newChar = new Character(characterClass, characterRace, str, wis, dex, intelligence, con, cha,
-						isFemale);
+				String characterName = (String)JOptionPane.showInputDialog(
+			               contentPane,
+			               "What is thy name adventurer?", 
+			               "Character Name",            
+			               JOptionPane.PLAIN_MESSAGE,
+			               null,            
+			               null, 
+			               "Lightsong The Bold"
+			            );
+				Boolean isLegendary;
+				if(chckbxLegendaryCheckBox.isSelected()) {
+					isLegendary = true;
+				} else {
+					isLegendary = false;
+				}
+				Character newChar = new Character(characterName, characterClass, characterRace, str, wis, dex, intelligence, con, cha,
+						isFemale, isLegendary);
 				newChar.createCharacter();
 			}
 		});
@@ -480,13 +596,25 @@ public class MainWindow extends JFrame {
 		JButton btnResetCharacterButton = new JButton("Reset");
 		btnResetCharacterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				counter = 0;
 				classComboBox.setSelectedIndex(0);
 				raceComboBox.setSelectedIndex(0);
 				((ChangingImgsPanel) displayPanel).changeHead(0);
 				((ChangingImgsPanel) displayPanel).changeBody(0);
 				rdbtnManButton.setSelected(true);
+				str = 14;
+				wis = 6;
+				dex = 11;
+				intelligence = 6;
+				con = 14;
+				cha = 11;
+				lblStrLabel.setText("Str: " + str);
+				lblWisLabel.setText("Wis: " + wis);
+				lblDexLabel.setText("Dex: " + dex);
+				lblIntLabel.setText("Int: " + intelligence);
+				lblConLabel.setText("Con: " + con);
+				lblChaLabel.setText("Cha: " + cha);
+				
 			}
 		});
 		createCharacterResetPanel.add(btnResetCharacterButton);
