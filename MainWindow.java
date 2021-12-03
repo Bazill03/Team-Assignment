@@ -207,6 +207,9 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				characterClass = classComboBox.getSelectedItem().toString();
 				
+				//Apply default stats
+				applyDefaultStats(characterRace, characterClass);
+				
 				if (characterClass == "Warrior") {
 					classCounter = 0;
 					((ChangingImgsPanel) displayPanel).changeBody(0);
@@ -251,6 +254,10 @@ public class MainWindow extends JFrame {
 				
 				characterRace = raceComboBox.getSelectedItem().toString();
 				
+				//Change default stats
+				applyDefaultStats(characterRace, characterClass);
+				
+				//apply portrait
 				if (characterRace == "Human" && isFemale == false) {
 					counter = 0;
 					((ChangingImgsPanel) displayPanel).changeHead(counter);
@@ -608,12 +615,8 @@ public class MainWindow extends JFrame {
 				intelligence = 6;
 				con = 14;
 				cha = 11;
-				lblStrLabel.setText("Str: " + str);
-				lblWisLabel.setText("Wis: " + wis);
-				lblDexLabel.setText("Dex: " + dex);
-				lblIntLabel.setText("Int: " + intelligence);
-				lblConLabel.setText("Con: " + con);
-				lblChaLabel.setText("Cha: " + cha);
+				pointsToSpend = 10;
+				setLabelText();
 				
 			}
 		});
@@ -659,32 +662,39 @@ public class MainWindow extends JFrame {
 	}
 
 	/**
-	 * Raises or lowers a characters stat and updates the main window.
-	 * 
-	 * @param stat    Stat to be raised or lowered
-	 * @param label   Label associated with stat.
-	 * @param toRaise True if raising, false if lowering.
+	 * Applies default stats to the GUI.
+	 *
+	 * @param characterRace Race of the player
+	 * @param characterClass Class of the player
 	 */
-	private void raiseOrLowerStat(int stat, String statName, JLabel label, Boolean toRaise) {
-
-		if (toRaise == true) {
-			if (pointsToSpend > 0) {
-				stat++;
-				System.out.println("Setting " + stat);
-				pointsToSpend--;
-				label.setText(statName + ": " + stat);
-				System.out.println("Attempting to set text for " + label.getText());
-				lbltotalStatsLabel.setText("Points: " + pointsToSpend);
-			}
-		}
-		if (toRaise == false) {
-			if (stat > 0) {
-				stat--;
-				pointsToSpend++;
-				label.setText(statName + ": " + stat);
-				lbltotalStatsLabel.setText("Points: " + pointsToSpend);
-			}
-		}
+	private void applyDefaultStats(String characterRace, String characterClass) {
+		//Gets new stats from Character
+		int[] newStats = Character.getDefaultStats(characterRace, characterClass);
+		//player stat order: str, wis, dex, int, con, cha
+		//Applies stats
+		str = newStats[0];
+		wis = newStats[1];
+		dex = newStats[2];
+		intelligence = newStats[3];
+		con = newStats[4];
+		cha = newStats[5];
+		
+		//Resets points to spend
+		pointsToSpend = 10;
+		
+		setLabelText();
+		
 	}
-
+	/**
+	 * Changes stat labels to reflect user changes.
+	 */
+	private void setLabelText() {
+		lblStrLabel.setText("Str: " + str);
+		lblWisLabel.setText("Wis: " + wis);
+		lblDexLabel.setText("Dex: " + dex);
+		lblIntLabel.setText("Int: " + intelligence);
+		lblConLabel.setText("Con: " + con);
+		lblChaLabel.setText("Cha: " + cha);
+		lbltotalStatsLabel.setText("Points to Spend: " + pointsToSpend); 
+	}
 }
