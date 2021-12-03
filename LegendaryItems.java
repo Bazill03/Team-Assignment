@@ -8,4 +8,14 @@ public class LegendaryItems<I,N> {
 		this.items = items;
 		this.numbers = numbers;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <I> I returnItem(){
+		return (I) items;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <N> N returnItemNumber() {
+		return (N) numbers;
+	}
 }
