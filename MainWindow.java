@@ -1,3 +1,5 @@
+package dnDCharacterCreator;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -22,8 +24,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.Cursor;
+import java.awt.Font;
 
 public class MainWindow extends JFrame {
 
@@ -50,13 +54,28 @@ public class MainWindow extends JFrame {
 	 */
 
 	// Temp
-
-	String[] races = { "Human", "Worgen", "Troll", "Elf" };
-	String[] classes = { "Warrior", "Mage", "Paladin", "Hunter" };
+	LegendaryItems<String, Integer> holySword = new LegendaryItems<>("Holy Sword", 1);
+	LegendaryItems<String, Integer> enchantedStaff = new LegendaryItems<>("Enchanted Staff", 1);
+	LegendaryItems<String, Integer> dualPistol = new LegendaryItems<>("Dual Pistols", 2);
+	
+	Random rand = new Random();
+	
+	Integer[] headsMale = {0,2,4,6};
+	Integer[] headsFemale = {1,3,5,7};
+	
+	String[] races = {"Human", "Orge", "Troll", "Worgen"};
+	String[] classes = {"Warrior", "Mage", "Hunter"};
+	
 	JLabel lbltotalStatsLabel;
 	JLabel lblStrLabel;
+	
 	JComboBox raceComboBox;
 	JComboBox classComboBox;
+	
+	JPanel charSelectionPanel;
+	JPanel controlPanel;
+	private JPanel controlPanel_1;
+	
 	int pointsToSpend = 10;
 
 	// Stats
@@ -66,6 +85,9 @@ public class MainWindow extends JFrame {
 	int intelligence = 5;
 	int con = 10;
 	int cha = 5;
+	
+	int counter = 0;
+	int classCounter = 0;
 
 	// Race, Class, Gender
 	static String characterClass = "Warrior";
@@ -73,46 +95,129 @@ public class MainWindow extends JFrame {
 	static Boolean isFemale = false;
 
 	ButtonGroup genderGroup = new ButtonGroup();
+	private JPanel displayPanel;
+
+	private JRadioButton rdbtnWomanButton;
+
+	private JRadioButton rdbtnManButton;
 
 	// End temp
 
 	public MainWindow() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 550, 300);
+		setBounds(100, 100, 600, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new GridLayout(0, 2, 0, 0));
 
-		JPanel charSelectionPanel = new JPanel();
-		charSelectionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		contentPane.add(charSelectionPanel);
+		displayPanel = new ChangingImgsPanel();
+		contentPane.add(displayPanel);
+
+		controlPanel_1 = createControlPanel();
+
+	}
+
+	private JPanel createCharSelectionPanel(JPanel controlPanel) {
+		charSelectionPanel = new JPanel();
+		charSelectionPanel.setPreferredSize(new Dimension(250, 110));
+		charSelectionPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+		controlPanel.add(charSelectionPanel);
 		charSelectionPanel.setLayout(new GridLayout(0, 3, 0, 0));
 
-		JPanel raceSelectionPanel = new JPanel();
-		charSelectionPanel.add(raceSelectionPanel);
-		raceSelectionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JPanel raceSelectionPanel = raceSelectionPanel();
 
-		raceComboBox = new JComboBox(races);
-		raceComboBox.setBorder(new EmptyBorder(0, 0, 0, 0));
-		raceSelectionPanel.add(raceComboBox);
+		JPanel classSelectionPanel = createClassSelectionPanel();
 
-		JButton btnRaceInfoButton = new JButton("i");
-		btnRaceInfoButton.addActionListener(new ActionListener() {
+		JButton btnRandomizeButton = new JButton("Randomize");
+		btnRandomizeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				characterRace = raceComboBox.getSelectedItem().toString();
-				displayInfoFromComboBox(raceComboBox, false);
+				int genderIndex = rand.nextInt(2);
+				int bodyIndex = rand.nextInt(3);	
+				
+				if (genderIndex == 0) {
+					isFemale = true;
+					int headIndex = headsFemale[rand.nextInt(4)];
+					rdbtnWomanButton.setSelected(true);
+					
+					counter = headIndex;
+					
+					if (counter == 0 || counter == 1)
+						raceComboBox.setSelectedIndex(0);
+					else if (counter == 2 || counter == 3)
+						raceComboBox.setSelectedIndex(1);
+					else if (counter == 4 || counter == 5)
+						raceComboBox.setSelectedIndex(2);
+					else
+						raceComboBox.setSelectedIndex(3);
+					
+					((ChangingImgsPanel) displayPanel).changeHead(headIndex);
+				} else {
+					isFemale = false;
+					int headIndex = headsMale[rand.nextInt(4)];
+					rdbtnManButton.setSelected(true);
+					
+					counter = headIndex;
+					
+					if (counter == 0 || counter == 1)
+						raceComboBox.setSelectedIndex(0);
+					else if (counter == 2 || counter == 3)
+						raceComboBox.setSelectedIndex(1);
+					else if (counter == 4 || counter == 5)
+						raceComboBox.setSelectedIndex(2);
+					else
+						raceComboBox.setSelectedIndex(3);
+					
+					((ChangingImgsPanel) displayPanel).changeHead(headIndex);
+				}
+
+				
+				((ChangingImgsPanel) displayPanel).changeBody(bodyIndex);
+				
+				if (bodyIndex == 0)
+					classComboBox.setSelectedIndex(0);
+				else if (bodyIndex == 1)
+					classComboBox.setSelectedIndex(1);
+				else
+					classComboBox.setSelectedIndex(2);
 			}
 		});
-		raceSelectionPanel.add(btnRaceInfoButton);
+		btnRandomizeButton.setFont(new Font("Verdana", Font.PLAIN, 11));
+		btnRandomizeButton.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnRandomizeButton.setBorder(new EmptyBorder(10, 10, 10, 10));
+		charSelectionPanel.add(btnRandomizeButton);
 
+		return charSelectionPanel;
+	}
+
+	private JPanel createClassSelectionPanel() {
 		JPanel classSelectionPanel = new JPanel();
 		charSelectionPanel.add(classSelectionPanel);
 		classSelectionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		JComboBox classComboBox = new JComboBox(classes);
+		classComboBox = new JComboBox(classes);
 		classComboBox.setBorder(new EmptyBorder(1, 0, 0, 0));
+		classComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				characterClass = classComboBox.getSelectedItem().toString();
+				
+				if (characterClass == "Warrior") {
+					classCounter = 0;
+					((ChangingImgsPanel) displayPanel).changeBody(0);
+				}
+				else if (characterClass == "Mage") {
+					classCounter = 1;
+					((ChangingImgsPanel) displayPanel).changeBody(1);
+				}
+				else if (characterClass == "Hunter") {
+					classCounter = 2;
+					((ChangingImgsPanel) displayPanel).changeBody(2);
+				}
+					
+				
+			}
+		});
 		classSelectionPanel.add(classComboBox);
 
 		JButton btnClassInfoButton = new JButton("i");
@@ -125,34 +230,120 @@ public class MainWindow extends JFrame {
 		});
 		classSelectionPanel.add(btnClassInfoButton);
 
-		JButton btnRandomizeButton = new JButton("Randomize");
-		btnRandomizeButton.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnRandomizeButton.setBorder(new EmptyBorder(0, 0, 0, 0));
-		charSelectionPanel.add(btnRandomizeButton);
+		return classSelectionPanel;
+	}
 
-		JPanel GenderPanel = new JPanel();
-		contentPane.add(GenderPanel);
+	private JPanel raceSelectionPanel() {
+		JPanel raceSelectionPanel = new JPanel();
+		charSelectionPanel.add(raceSelectionPanel);
+		raceSelectionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		JRadioButton rdbtnManButton = new JRadioButton("Man");
-		rdbtnManButton.addActionListener(new ActionListener() {
+		raceComboBox = new JComboBox(races);
+		raceComboBox.setBorder(new EmptyBorder(0, 0, 0, 0));
+		raceComboBox.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
-				isFemale = false;
+				
+				characterRace = raceComboBox.getSelectedItem().toString();
+				
+				
+				if (characterRace == "Human" && isFemale == false) {
+					counter = 0;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+				else if (characterRace == "Human" && isFemale == true) {
+					counter = 1;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+				else if (characterRace == "Orge" && isFemale == false) {
+					counter = 2;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+				else if (characterRace == "Orge" && isFemale == true) {
+					counter = 3;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+					
+				else if (characterRace == "Troll" && isFemale == false) {
+					counter = 4;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+				else if (characterRace == "Troll" && isFemale == true) {
+					counter = 5;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+				else if (characterRace == "Worgen" && isFemale == false) {
+					counter = 6;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+				else if (characterRace == "Worgen" && isFemale == true) {
+					counter = 7;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+					
 			}
 		});
+		raceSelectionPanel.add(raceComboBox);
+
+		JButton btnRaceInfoButton = new JButton("i");
+		btnRaceInfoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				characterRace = raceComboBox.getSelectedItem().toString();
+				displayInfoFromComboBox(raceComboBox, false);
+			}
+		});
+		raceSelectionPanel.add(btnRaceInfoButton);
+
+		return raceSelectionPanel;
+	}
+
+	private JPanel createGenderPanel() {
+		JPanel GenderPanel = new JPanel();
+		GenderPanel.setPreferredSize(new Dimension(200, 30));
+		
+		controlPanel_1.add(GenderPanel);
+		
+		rdbtnManButton = new JRadioButton("Man");
 		genderGroup.add(rdbtnManButton);
 		GenderPanel.add(rdbtnManButton);
-
-		JRadioButton rdbtnWomanButton = new JRadioButton("Woman");
-		rdbtnWomanButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				isFemale = true;
-			}
-		});
+		
+		rdbtnWomanButton = new JRadioButton("Woman");
 		genderGroup.add(rdbtnWomanButton);
 		GenderPanel.add(rdbtnWomanButton);
+	
+		rdbtnManButton.setSelected(true);
+		
+		JRadioButton radioButton = new JRadioButton("New radio button");
+		GenderPanel.add(radioButton);
+		
+		rdbtnManButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isFemale == true) {
+					isFemale = false;
+					counter-=1;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+			}
+		});
+		
+		rdbtnWomanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isFemale == false) {
+					isFemale = true;
+					counter+=1;
+					((ChangingImgsPanel) displayPanel).changeHead(counter);
+				}
+			}
+		});
+		
 
+		return GenderPanel;
+	}
+
+	private JPanel createStatsPanel() {
 		JPanel StatsPanel = new JPanel();
-		contentPane.add(StatsPanel);
+		StatsPanel.setPreferredSize(new Dimension(275, 100));
+		controlPanel_1.add(StatsPanel);
 		StatsPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
 		JPanel strPanel = new JPanel();
@@ -263,10 +454,15 @@ public class MainWindow extends JFrame {
 		chaPanel.add(btnChaUpButton);
 
 		lbltotalStatsLabel = new JLabel("Points: " + pointsToSpend);
+		lbltotalStatsLabel.setPreferredSize(new Dimension(100, 14));
 		StatsPanel.add(lbltotalStatsLabel);
 
-		JPanel panel = new JPanel();
-		contentPane.add(panel);
+		return StatsPanel;
+	}
+
+	private JPanel createCharacterResetPanel() {
+		JPanel createCharacterResetPanel = new JPanel();
+		controlPanel_1.add(createCharacterResetPanel);
 
 		JButton btnCreateCharacterButton = new JButton("Create");
 		btnCreateCharacterButton.addActionListener(new ActionListener() {
@@ -279,11 +475,38 @@ public class MainWindow extends JFrame {
 				newChar.createCharacter();
 			}
 		});
-		panel.add(btnCreateCharacterButton);
+		createCharacterResetPanel.add(btnCreateCharacterButton);
 
 		JButton btnResetCharacterButton = new JButton("Reset");
-		panel.add(btnResetCharacterButton);
+		btnResetCharacterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				counter = 0;
+				classComboBox.setSelectedIndex(0);
+				raceComboBox.setSelectedIndex(0);
+				((ChangingImgsPanel) displayPanel).changeHead(0);
+				((ChangingImgsPanel) displayPanel).changeBody(0);
+				rdbtnManButton.setSelected(true);
+			}
+		});
+		createCharacterResetPanel.add(btnResetCharacterButton);
 
+		return createCharacterResetPanel;
+	}
+
+	private JPanel createControlPanel() {
+		controlPanel_1 = new JPanel();
+		contentPane.add(controlPanel_1);
+
+		JPanel charSelectionPanel = createCharSelectionPanel(controlPanel_1);
+
+		JPanel GenderPanel = createGenderPanel();
+
+		JPanel StatsPanel = createStatsPanel();
+
+		JPanel createCharacterResetPanel = createCharacterResetPanel();
+
+		return controlPanel_1;
 	}
 
 	/**
@@ -299,7 +522,7 @@ public class MainWindow extends JFrame {
 
 		// Opens a window.
 		try {
-			displayInformation.getInformation(findDesc);
+			DisplayInformation.getInformation(findDesc);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -337,4 +560,3 @@ public class MainWindow extends JFrame {
 	}
 
 }
-
