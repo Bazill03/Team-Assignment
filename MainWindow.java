@@ -695,6 +695,6 @@ public class MainWindow extends JFrame {
 		lblIntLabel.setText("Int: " + intelligence);
 		lblConLabel.setText("Con: " + con);
 		lblChaLabel.setText("Cha: " + cha);
-		lbltotalStatsLabel.setText("Points to Spend: " + pointsToSpend); 
+		lbltotalStatsLabel.setText("Points: " + pointsToSpend); 
 	}
 }
