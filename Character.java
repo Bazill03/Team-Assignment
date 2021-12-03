@@ -55,11 +55,17 @@ public class Character {
 		Collections.addAll(this.statList, this.str, this.wis, this.dex, this.intelligence, this.con, this.cha);
 	}
 	
-	
-	static public int[] getDefaultStats(String playerRaceOrClass) {
+	/**
+	 * Sets default stats.
+	 * @param characterRace player race
+	 * @param characterClass player class
+	 * @return An array of stats to be applied in main window.
+	 */
+	static public int[] getDefaultStats(String characterRace, String characterClass) {
 		
 		int[] baseStats = {10,10,10,10,10,10};
 		int[] outputStats = baseStats;
+		
 		//player stat order: str, wis, dex, int, con, cha
 		int[] humanStats = {2,-1,2,-1,1,3};
 		int[] trollStats = {2,-2,2,-2,-1,-1};
@@ -80,8 +86,18 @@ public class Character {
 		raceSet.put("Hunter", hunterStats);
 		raceSet.put("Warrior", warriorStats);
 	
+		//Setting default race stats
 		for(Map.Entry<String, int[]> el : raceSet.entrySet()){
-			if(el.getKey() == playerRaceOrClass) {
+			if(el.getKey() == characterRace) {
+				for(int i = 0; i < el.getValue().length; i++) {
+					outputStats[i] += el.getValue()[i];
+				}
+			}
+		}
+		
+		//Setting default class stats
+		for(Map.Entry<String, int[]> el : raceSet.entrySet()){
+			if(el.getKey() == characterClass) {
 				for(int i = 0; i < el.getValue().length; i++) {
 					outputStats[i] += el.getValue()[i];
 				}
@@ -96,7 +112,6 @@ public class Character {
 	/**
 	 * Creates a character file given a character object.
 	 */
-	@SuppressWarnings("unchecked")
 	public void createCharacter() {
 				
 		System.out.println("Creating file...");
@@ -134,7 +149,7 @@ public class Character {
 				
 				//Get random item
 				Random rand = new Random();
-				LegendaryItems item = items.get(rand.nextInt(items.size()));
+				LegendaryItems<String, Integer> item = items.get(rand.nextInt(items.size()));
 				print.write("You are legendary! You start with: " + item.returnItemNumber().toString() + " " + item.returnItem().toString() + "!");
 			}
 			
@@ -146,4 +161,3 @@ public class Character {
 	
 	
 }
-
